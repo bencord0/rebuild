@@ -1,0 +1,67 @@
+Rebuild
+=======
+
+A reimagination of Gentoo's ebuild and emerge tools.
+
+About
+=====
+This repo does not exist
+I wish there was code
+Your pull-requests are welcome
+
+Usage
+=====
+
+Install a package
+-----------------
+`rebuild` is a drop in replacement for the emerge command.
+
+    # rebuild vim
+    # rebuild sys-process/htop
+    # rebuild /usr/portage/sys-apps/sed/sed-4.2.ebuild
+    # rebuild  ~/modified_ebuilds/nginx-1.4.4.ebuild
+
+Uninstall a package
+-------------------
+`rebuild` follows the usual `emerge` syntax of -c and -C.
+
+    # rebuild --clean sys-apps/duplicity
+    # rebuild --unmerge apache
+
+View and edit the source of a package
+-------------------------------------
+`rebuild` can also do tasks of the `ebuild` command.
+
+    # rebuild --unpack app-misc/hello
+    # sudo -u portage bash
+    portage$ cd /var/tmp/portage/app-misc/hello-2.9/work/hello-2.9/
+    portage$ ls
+
+At this point you can hack around a bit before compiling with the ebuild API.
+
+     portage$ rebuild --compile app-misc/hello
+
+If you like your changes, make a patch.
+
+    portage$ cd ~/app-misc/hello-2.9
+    portage$ mkdir orig
+    portage$ tar xaf distdir/hello-2.9.tar.gz -C orig
+    portage$ diff -ur {orig,work}/hello-2.9/src/hello.c > /tmp/change_greeting.patch
+
+Install to the live filesystem with your changes.
+`--merge` is the default action if not explicitly specified.
+`--noclean` will leave your modified sources in place.
+
+    # rebuild --merge --noclean app-misc/hello
+
+Publish your changes
+--------------------
+Note: I have no idea what this command should do, but OMG it would be cool!
+
+    $ rebuild --send-patch-for-review app-misc/hello /tmp/change_greeting.patch
+
+If your changes are successfully reviewed, everyone else can install them.
+
+    # rebuild --sync
+    # rebuild app-misc/hello
+
